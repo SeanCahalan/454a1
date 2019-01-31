@@ -68,7 +68,6 @@ void Object::setupVAO( float objectVerts[], float objectWidth )
   glEnableVertexAttribArray( 0 );
 
   //clear by binding 0
-
   glBindBuffer( GL_ARRAY_BUFFER, 0 );
   glBindVertexArray( 0 );
   

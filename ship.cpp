@@ -26,6 +26,11 @@ void Ship::addThrust( float deltaT )
   // since the object velocity is in the world coordinate system.
 
   // YOUR CODE HERE
+
+  float vX = velocity.x - sin( orientation.angle() ) * SHIP_THRUST_ACCEL * deltaT;
+  float vY = velocity.y + cos( orientation.angle() ) * SHIP_THRUST_ACCEL * deltaT;
+
+  velocity = vec3( vX, vY, 0);
 }
 
 
@@ -34,7 +39,19 @@ Shell * Ship::fireShell()
 {
   // YOUR CODE HERE (below, find the correct position, velocity, and orientation for the shell)
 
-  return new Shell( vec3(0,0,0), vec3(0,0,0), quaternion(1,0,0,0) );
+  vec3 Ps = vec3(
+    position.x - sin( orientation.angle() ) * 10,
+    position.y + cos( orientation.angle() ) * 10,
+    0
+  );  
+
+  vec3 Vs = vec3(
+    SHELL_SPEED * sin( orientation.angle() ) * -1,
+    SHELL_SPEED * cos( orientation.angle() ),
+    0
+  );
+
+  return new Shell( Ps, Vs, quaternion(1,0,0,0) );
 }
 
 
