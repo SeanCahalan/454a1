@@ -18,6 +18,7 @@ class Segment {
     return x < y ? x : y;
   }  
 
+  // check if point q lies on segment pr 
   bool onSegment(vec3 p, vec3 q, vec3 r) 
   { 
       if (q.x <= max(p.x, r.x) && q.x >= min(p.x, r.x) && 
@@ -40,6 +41,7 @@ class Segment {
   bool intersects( Segment const& s2 ) {
     // YOUR CODE HERE
 
+    
     vec3 p1 = tail;
     vec3 q1 = head;
     vec3 p2 = s2.tail;
@@ -50,7 +52,7 @@ class Segment {
     int o3 = orientation(p2, q2, p1); 
     int o4 = orientation(p2, q2, q1); 
   
-    // General case 
+    // check if line segments instersect using their orientations
     if (o1 != o2 && o3 != o4) 
         return true; 
 
@@ -63,7 +65,7 @@ class Segment {
     if (o4 == 0 && onSegment(p2, q1, q2)) return true; 
   
     return false;
-    
+
   }
 };
 

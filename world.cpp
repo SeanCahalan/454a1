@@ -126,6 +126,7 @@ void World::updateState( float elapsedTime )
           // update score
           score += asteroids[j]->scoreValue;
 
+          // stop shell from hitting other asteroids
           shells.erase(shells.begin()+i);
           i--;
 
@@ -140,6 +141,7 @@ void World::updateState( float elapsedTime )
             float vx = asteroids[j]->velocity.x * ASTEROID_SPEED_INCREASE;
             float vy = asteroids[j]->velocity.y * ASTEROID_SPEED_INCREASE;
 
+            // create left and right splits with new velocity and scale factor
             Asteroid *aleft = new Asteroid( vec3(x, y, 0) );
             aleft->velocity = vec3(vx, -vy, 0);
             aleft->scoreValue = asteroids[j]->scoreValue * 2;
