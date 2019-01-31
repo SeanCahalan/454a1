@@ -86,7 +86,7 @@ void World::updateState( float elapsedTime )
 
   // Update the shells (check for asteroid collisions)
 
-  for (unsigned int i=0; i<shells.size(); i++) {
+  for (unsigned int i=0; i<shells.size() && i >= 0; i++) {
     shells[i]->elapsedTime += elapsedTime;
 
     if (shells[i]->elapsedTime > SHELL_MAX_TIME) { // remove an old shell
@@ -118,6 +118,48 @@ void World::updateState( float elapsedTime )
       // 
       // - the sub-asteroid scaleFactor and scoreValue should be
       //   modified from those of the parent asteroid.
+
+      for (unsigned int j=0; j<asteroids.size(); j++) {
+
+        if (state == RUNNING && asteroids[j]->intersects( path )){
+
+          // update score
+          score += asteroids[j]->scoreValue;
+
+          shells.erase(shells.begin()+i);
+          i--;
+
+          // remove asteroid
+          if (asteroids[j]->scaleFactor * ASTEROID_SCALE_FACTOR_REDUCTION < MIN_ASTEROID_SCALE_FACTOR) {
+            asteroids.erase(asteroids.begin()+j);
+            j--;
+          // Split asteroid	
+          } else {  
+            float x = asteroids[j]->position.x;
+            float y = asteroids[j]->position.y;
+            float vx = asteroids[j]->velocity.x * ASTEROID_SPEED_INCREASE;
+            float vy = asteroids[j]->velocity.y * ASTEROID_SPEED_INCREASE;
+
+            Asteroid *aleft = new Asteroid( vec3(x, y, 0) );
+            aleft->velocity = vec3(vx, -vy, 0);
+            aleft->scoreValue = asteroids[j]->scoreValue * 2;
+            aleft->scaleFactor = asteroids[j]->scaleFactor * ASTEROID_SCALE_FACTOR_REDUCTION;
+
+            Asteroid *aright = new Asteroid( vec3(x, y, 0) );
+            aright->velocity = vec3(-vx, vy, 0);
+            aright->scoreValue = asteroids[j]->scoreValue * 2;
+            aright->scaleFactor = asteroids[j]->scaleFactor * ASTEROID_SCALE_FACTOR_REDUCTION;
+
+            asteroids.push_back(aleft);
+            asteroids.push_back(aright);
+
+            asteroids.erase(asteroids.begin()+j);
+            j--;
+
+            break;
+          }
+        }
+      }
 
     }
   }
